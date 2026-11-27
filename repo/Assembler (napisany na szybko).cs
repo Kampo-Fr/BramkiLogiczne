@@ -2,46 +2,18 @@ class Program
 {
     static void Main(string[] args)
     {
-        static int bit_na_liczbe(string bit)
-        {
-            int dodajnik = 1;
-            int odp = 0;
-            for (int i = bit.Length-1;i>=0;i--)
-            {
-                if (bit[i] == '1')
-                    odp += dodajnik;
-                else if (bit[i] != '0')
-                    throw new Exception("Nie zero ani jeden");
-                dodajnik *= 2;
-            }
-            return odp;
-        }
-        static string na_string(string liczba)
-        {
-            string odp = Convert.ToString(int.Parse(liczba), 2);
-            if (odp.Length > 8)
-                throw new Exception("Za duża liczba");
-            if (odp.Length == 8)
-                return odp;
+        string scierzka = "Ścieżka do pliku";
 
+        string nazwa = "nazwa scorbordu w MC";
 
-            int ile = 8 - odp.Length;
-            string doczep = "";
-            for (int i = 0; ile > i; i++)
-            {
-                doczep += '0';
-            }
-            return doczep + odp;
-
-        }
-        StreamReader plik = new StreamReader("C:\\Users\\Kamil\\Desktop\\Fibonaci.txt");
+        StreamReader plik = new StreamReader(scierzka);
         string kod = plik.ReadToEnd();
         plik.Close();
-        
+
 
         Dictionary<string, string> słownik = new Dictionary<string, string>();
-        
-        słownik.Add("ADD","0001");
+
+        słownik.Add("ADD", "0001");
         słownik.Add("SUB", "0011");
         słownik.Add("AND", "0101");
         słownik.Add("OR", "0111");
@@ -76,22 +48,25 @@ class Program
         słownik.Add("=", "0000");
         słownik.Add("!=", "0100");
         słownik.Add(">=", "0010");
+        słownik.Add("<", "0110");
+        słownik.Add("<=", "1010");
+        słownik.Add(">", "1000");
         słownik.Add("ALWAYS", "1100");
 
-        
-        
 
-        string[] linie_kodu = kod.Split('\n','\r');
+
+
+        string[] linie_kodu = kod.Split('\n', '\r');
         string[] odp = new string[linie_kodu.Length];
-        for (int i = 0; linie_kodu.Length > i; i+=2)
+        for (int i = 0; linie_kodu.Length > i; i += 2)
         {
             string[] polecenia = linie_kodu[i].Split(' ');
             for (int j = 0; j < polecenia.Length; j++)
             {
                 if (słownik.ContainsKey(polecenia[j]))
-                    odp[i/2] += słownik[polecenia[j]];
+                    odp[i / 2] += słownik[polecenia[j]];
                 else
-                    odp[i/2] += na_string(polecenia[j]);
+                    odp[i / 2] += na_string(polecenia[j]);
             }
         }
 
@@ -102,11 +77,29 @@ class Program
             if (odp[i].Length == 12)
                 odp[i] += "0000";
 
-            odp[i] = $"scoreboard players set {i} Fib " + Convert.ToInt32(odp[i],2).ToString();
+            odp[i] = $"scoreboard players set {i} {nazwa} " + Convert.ToInt32(odp[i], 2).ToString();
 
             Console.WriteLine(odp[i]);
         }
 
+
+    }
+    static string na_string(string liczba)
+    {
+        string odp = Convert.ToString(int.Parse(liczba), 2);
+        if (odp.Length > 8)
+            throw new Exception("Za duża liczba");
+        if (odp.Length == 8)
+            return odp;
+
+
+        int ile = 8 - odp.Length;
+        string doczep = "";
+        for (int i = 0; ile > i; i++)
+        {
+            doczep += '0';
+        }
+        return doczep + odp;
 
     }
 }
